@@ -11,18 +11,12 @@ class Todo < ActiveRecord::Base
   after_create do
     create_event(creator, "add", event_content)
   end
+
   def event_content
-    doer_name = ""
-    if !doer.nil?
-      doer_name = doer.name
-    end
     event_content = {
-        creator_name: self.creator.name,
+        creator_name: creator.name,
         title: title,
         content: content,
-        due: due,
-        doer_id: self.doer_id,
-        doer_name: doer_name,
         status: status
     }
   end
@@ -40,14 +34,21 @@ class Todo < ActiveRecord::Base
     end
     self.doer = doer
     if self.save
-      self.create_event(user, action, self.event_content)
+      self.create_event(user, action, self.event_content.update({
+                                                                    doer_id: doer.id,
+                                                                    doer_name: doer.name
+                                                                }))
     end
   end
 
   def change_due(user, due)
+    old_due = self.due
     self.due=due
     if self.save
-      self.create_event(user, "change_due", self.event_content)
+      self.create_event(user, "change_due", self.event_content.update({
+                                                                          old_due: old_due,
+                                                                          due: due
+                                                                      }))
     end
   end
 
