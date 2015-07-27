@@ -1,7 +1,7 @@
 class Comment < ActiveRecord::Base
   include Eventable
 
-  belongs_to :commentable, :polymorphic => true
+  belongs_to :commentable, polymorphic: true
   belongs_to :creator, class_name: "User", :foreign_key => "creator_id"
 
   validates :creator_id, presence: true
@@ -10,6 +10,10 @@ class Comment < ActiveRecord::Base
 
   after_create do
     create_event(creator, "add", event_content)
+  end
+
+  def project_id
+    self.commentable.project_id
   end
 
   def event_content

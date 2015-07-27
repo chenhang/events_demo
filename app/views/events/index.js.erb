@@ -1,0 +1,7 @@
+$('#events').append('<%= escape_javascript render('events/events') %>');
+<% if @events.next_page %>
+$('.pagination').replaceWith('<%= j will_paginate @events %>');
+<% else %>
+$(window).off('scroll');
+$('.pagination').replaceWith('没有更多内容了');
+<% end %>

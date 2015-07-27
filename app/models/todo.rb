@@ -29,14 +29,17 @@ class Todo < ActiveRecord::Base
 
   def assign(user, doer)
     action = "assign"
+    old_doer_name = ""
     if self.doer.present?
       action = "change_doer"
+      old_doer_name = doer.name
     end
     self.doer = doer
     if self.save
       self.create_event(user, action, self.event_content.update({
                                                                     doer_id: doer.id,
-                                                                    doer_name: doer.name
+                                                                    doer_name: doer.name,
+                                                                    old_doer_name: old_doer_name
                                                                 }))
     end
   end

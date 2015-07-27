@@ -12,13 +12,17 @@ Access.create(project_id: project_a.id, user_id: user_b.id)
 Access.create(project_id: project_b.id, user_id: user_b.id)
 Access.create(project_id: project_a.id, user_id: admin_user.id)
 Access.create(project_id: project_b.id, user_id: admin_user.id)
+Access.create(project_id: project_b.id, user_id: user_a.id)
 
 50.times do |i|
+  project_id = i.modulo(2)+1
   todo = Todo.create(title: "test_#{i}", content: "test_content_#{i}",
-                     creator_id: admin_user.id, project_id: project_b.id)
+                     creator_id: admin_user.id, project_id: project_id)
   todo.assign(admin_user, user_a)
   todo.change_due(user_a, todo.created_at)
   todo.assign(user_a, user_b)
   todo.finish(user_b)
   todo.delete(user_a)
+  comment = Comment.create(creator: admin_user, content: "test_comment",
+                           commentable: todo)
 end

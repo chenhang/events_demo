@@ -6,6 +6,10 @@ class EventsController < ApplicationController
     @projects = @user.projects
     project_ids = @projects.map { |project| project[:id] }
     @events = Event.where("project_id in (?)", project_ids)
-                  .paginate(page: params[:page], per_page: 20)
+                  .paginate(page: params[:page], per_page: 100)
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
 end

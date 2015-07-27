@@ -1,5 +1,5 @@
-<div class="events">
-  <%= render @events %>
+<div id="events">
+  <%= render 'events/events', events: @events %>
 </div>
 
-<%= will_paginate @posts %>
+<%= will_paginate @events%>
