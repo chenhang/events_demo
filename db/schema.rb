@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150727061924) do
+ActiveRecord::Schema.define(version: 20150727082607) do
 
   create_table "accesses", force: :cascade do |t|
     t.integer  "project_id"
@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(version: 20150727061924) do
     t.integer  "project_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string   "status"
   end
 
   add_index "todos", ["project_id"], name: "index_todos_on_project_id"
