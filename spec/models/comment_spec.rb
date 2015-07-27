@@ -2,11 +2,11 @@ require 'rails_helper'
 
 describe Comment do
   before(:each) do
-    team = Team.create(name: "test_team")
-    @user = User.create(name: "test_user", team_id:team.id)
-    @project = Project.create(name: "test_project", team_id:team.id)
-    @access = Access.create(user_id: @user.id, project_id: @project.id)
-    @todo = Todo.create(title: "test", content: "test", creator_id: @user.id)
+    team = Team.find_or_create_by(name: "test_team")
+    @user = User.find_or_create_by(name: "test_user", team_id:team.id)
+    @project = Project.find_or_create_by(name: "test_project", team_id:team.id)
+    @access = Access.find_or_create_by(user_id: @user.id, project_id: @project.id)
+    @todo = Todo.find_or_create_by(title: "test", content: "test", creator_id: @user.id)
   end
   it "is valid with creator and commentable" do
     expect(Comment.new(creator_id: @user.id, commentable_id: @todo.id, commentable_type: @todo.class.to_s)).to be_valid
