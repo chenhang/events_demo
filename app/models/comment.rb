@@ -9,7 +9,7 @@ class Comment < ActiveRecord::Base
   validates :commentable_type, presence: true
 
   after_create do
-    self.create_event(self.creator, "add", event_content)
+    create_event(creator, "add", event_content)
   end
 
   def event_content

@@ -1,7 +1,11 @@
+
 class EventsController < ApplicationController
   def index
     @team = Team.find(1)
-    @project = Project.find(2)
-    @events = @project.events.order(created_at: :desc)
+    @user = User.find(1)
+    @projects = @user.projects
+    project_ids = @projects.map { |project| project[:id] }
+    @events = Event.where("project_id in (?)", project_ids)
+                  .paginate(page: params[:page], per_page: 20)
   end
 end
