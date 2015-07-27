@@ -3,4 +3,7 @@ class Todo < ActiveRecord::Base
   belongs_to :creator, class_name: "User", :foreign_key => "creator_id"
   belongs_to :doer, class_name: "User", :foreign_key => "doer_id"
   has_many :comments, as: :commentable
+
+  validates :creator_id, presence: true
+  validates :title, presence: true
 end
