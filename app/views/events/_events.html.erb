@@ -4,12 +4,11 @@
     <% for event in @events %>
         <% if event_date.nil? || event.created_at.strftime('%m-%d') != event_date %>
             <% event_date = event.created_at.strftime('%m-%d') %>
-            <h1><%= event_date %></h1>
+            <div class="events_date"><h2><%= event_date %></h2></div>
         <% end %>
         <% if current_parent_id.nil? || event.parentable_id != current_parent_id %>
             <% current_parent_id = event.parentable_id %>
-            <div><h2><%= event.parentable.name %></h2></div>
-            <hr>
+            <div class="events_parentable"><h2><%= event.parentable.name %></h2></div>
         <% end %>
         <% if event.eventable_type? %>
             <div class="event">

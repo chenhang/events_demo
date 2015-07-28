@@ -1,4 +1,15 @@
-$('#events').append('<%= escape_javascript render('events/events') %>');
+
+old_dates_length = $('.events_date').length;
+old_parentables_length = $('.events_parentable').length
+$('.events').append('<%= escape_javascript render('events/events') %>');
+date_doms = $('.events_date');
+parentable_doms = $('.events_parentable')
+remove_duplicated = function(doms, index){
+    if (doms[index-1].isEqualNode(doms[index])) doms[index].remove();
+}
+remove_duplicated(date_doms, old_dates_length);
+remove_duplicated(parentable_doms, old_parentables_length);
+
 <% if @events.next_page %>
 $('.pagination').replaceWith('<%= j will_paginate @events %>');
 <% else %>
