@@ -6,37 +6,38 @@ describe Event do
     @user = User.create(name: "test_user", team_id: @team.id)
     @project = Project.create(name: "test_project", team_id: @team.id)
     @access = Access.create(user_id: @user.id, project_id: @project.id)
-    @todo = Todo.create(title: "test", content: "test", creator_id: @user.id)
+    @todo = Todo.create(title: "test", content: "test", creator_id: @user.id, handler: @user)
   end
 
   it "after create a todo" do
-    new_todo = Todo.create(title: "new_todo", content: "new_todo", creator_id: @user.id)
+    new_todo = Todo.create(title: "new_todo", content: "new_todo", creator_id: @user.id, handler: @user)
     expect(Event.where(user_id: @user.id, eventable_id: new_todo.id,
                        eventable_type: new_todo.class.name, action: "add")).not_to be_nil
   end
   it "is created after destroy a todo" do
-    @todo.delete @user
+    @todo.delete
     expect(Event.where(user_id: @user.id, eventable_id: @todo.id,
                        eventable_type: @todo.class.name, action: "destroy")).not_to be_nil
   end
   it "is created after finish a todo" do
-    @todo.finish(@user)
+    @todo.finish
     expect(Event.where(user_id: @user.id, eventable_id: @todo.id,
                        eventable_type: @todo.class.name, action: "finish")).not_to be_nil
   end
   it "is created after assign a todo to a user" do
-    @todo.assign(@user, @user)
+    @todo.update(doer: @user)
     expect(Event.where(user_id: @user.id, eventable_id: @todo.id,
                        eventable_type: @todo.class.name, action: "assign")).not_to be_nil
   end
   it "is created after change the doer of a todo" do
-    @todo.doer = @user
-    @todo.assign(@user, User.create(name: "new_doer", team_id: @team.id))
+    @todo.update(doer: @user)
+
+    @todo.update(doer: User.create(name: "new_doer", team_id: @team.id))
     expect(Event.where(user_id: @user.id, eventable_id: @todo.id,
                        eventable_type: @todo.class.name, action: "change_doer")).not_to be_nil
   end
   it "is created after change the due date of a todo" do
-    @todo.change_due(@user, @todo.created_at)
+    @todo.update(due: Time.now)
     expect(Event.where(user_id: @user.id, eventable_id: @todo.id,
                        eventable_type: @todo.class.name, action: "change_due")).not_to be_nil
   end

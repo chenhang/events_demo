@@ -8,8 +8,8 @@ class Comment < ActiveRecord::Base
   validates :commentable_id, presence: true
   validates :commentable_type, presence: true
 
-  after_create do
-    create_event(creator, "add", event_content)
+  def handler
+    creator
   end
 
   def parentable

@@ -8,9 +8,6 @@ class Todo < ActiveRecord::Base
 
   validates :creator_id, presence: true
   validates :title, presence: true
-  after_create do
-    create_event(creator, "add", event_content)
-  end
 
 
   def event_content
@@ -23,47 +20,40 @@ class Todo < ActiveRecord::Base
   end
 
   def parentable
-    self.project
+    project
   end
 
-
-  def delete(user)
-    self.delete_at = Time.now
-    self.create_event(user, "destroy", self.event_content)
-  end
-
-  def assign(user, doer)
-    action = "assign"
-    old_doer_name = ""
-    if self.doer.present?
-      action = "change_doer"
-      old_doer_name = doer.name
+  def create_events
+    if !changes[:due].nil?
+      create_event("change_due", event_content.update({old_due: due_was, due: due}))
     end
-    self.doer = doer
-    if self.save
-      self.create_event(user, action, self.event_content.update({
-                                                                    doer_id: doer.id,
-                                                                    doer_name: doer.name,
-                                                                    old_doer_name: old_doer_name
-                                                                }))
-    end
-  end
 
-  def change_due(user, due)
-    old_due = self.due
-    self.due=due
-    if self.save
-      self.create_event(user, "change_due", self.event_content.update({
-                                                                          old_due: old_due,
-                                                                          due: due
-                                                                      }))
+    if !changes[:doer_id].nil?
+      if doer_id_was.nil?
+        create_event("assign", event_content.update({doer_id: doer.id, doer_name: doer.name}))
+      elsif doer_id.nil?
+        create_event("remove_doer", event_content.update({old_doer_name: User.find(doer_id_was).name}))
+      else
+        create_event("change_doer", event_content.update({doer_id: doer.id, doer_name: doer.name,
+                                                          old_doer_name: User.find(doer_id_was).name}))
+      end
+    end
+
+    if !changes[:delete_at].nil?
+      create_event("delete", event_content)
+    end
+    if !changes[:status].nil? && status == "finish"
+      create_event("finish", event_content)
     end
   end
 
-  def finish(user)
-    self.status = "finished"
-    if self.save
-      self.create_event(user, "finish", self.event_content)
-    end
+
+  def delete()
+    self.update(delete_at: Time.now)
   end
+
+  def finish()
+    self.update(status: "finished")
+  end
+
 end
