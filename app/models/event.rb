@@ -1,6 +1,7 @@
 class Event < ActiveRecord::Base
   belongs_to :user
-  belongs_to :project
+  belongs_to :eventable, polymorphic: true
+  belongs_to :parentable, polymorphic: true
 
   def event_content
     JSON.parse(self.content)

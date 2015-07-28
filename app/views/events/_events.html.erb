@@ -1,14 +1,14 @@
 <% if @events.any? %>
-    <% current_project_id = nil %>
+    <% current_parent_id = nil %>
     <% event_date = nil %>
     <% for event in @events %>
         <% if event_date.nil? || event.created_at.strftime('%m-%d') != event_date %>
             <% event_date = event.created_at.strftime('%m-%d') %>
             <h1><%= event_date %></h1>
         <% end %>
-        <% if current_project_id.nil? || event.project_id != current_project_id %>
-            <% current_project_id = event.project_id %>
-            <div><h2><%= event.project.name %></h2></div>
+        <% if current_parent_id.nil? || event.parentable_id != current_parent_id %>
+            <% current_parent_id = event.parentable_id %>
+            <div><h2><%= event.parentable.name %></h2></div>
             <hr>
         <% end %>
         <% if event.eventable_type? %>

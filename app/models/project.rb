@@ -2,7 +2,7 @@ class Project < ActiveRecord::Base
   belongs_to :team
   has_many :accesses, dependent: :destroy
   has_many :users, through: :accesses
-  has_many :events
+  has_many :events, as: :parentable
 
   validates :name, presence: true
   validate :name_cannot_be_same_in_team

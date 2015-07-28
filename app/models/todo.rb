@@ -12,6 +12,7 @@ class Todo < ActiveRecord::Base
     create_event(creator, "add", event_content)
   end
 
+
   def event_content
     event_content = {
         creator_name: creator.name,
@@ -19,6 +20,10 @@ class Todo < ActiveRecord::Base
         content: content,
         status: status
     }
+  end
+
+  def parentable
+    self.project
   end
 
 

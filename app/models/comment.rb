@@ -12,8 +12,8 @@ class Comment < ActiveRecord::Base
     create_event(creator, "add", event_content)
   end
 
-  def project_id
-    self.commentable.project_id
+  def parentable
+    self.commentable.project
   end
 
   def event_content
