@@ -5,11 +5,5 @@ class Project < ActiveRecord::Base
   has_many :events, as: :parentable
 
   validates :name, presence: true
-  validate :name_cannot_be_same_in_team
 
-  def name_cannot_be_same_in_team
-    if Project.where(name: self.name, team_id: self.team_id).exists?
-      errors.add(:name ,"is duplicated in project's team")
-    end
-  end
 end

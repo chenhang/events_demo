@@ -1,4 +1,3 @@
-
 class EventsController < ApplicationController
   def index
     @team = Team.find(1)

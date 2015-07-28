@@ -6,11 +6,5 @@ class User < ActiveRecord::Base
   has_many :events
 
   validates :name, presence: true
-  validate :name_cannot_be_same_in_team
 
-  def name_cannot_be_same_in_team
-    if User.where(name: self.name, team_id: self.team_id).exists?
-      errors.add(:name ,"is duplicated in user's team")
-    end
-  end
 end
