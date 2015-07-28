@@ -1,9 +1,13 @@
 <span class="name"><%= event.user_name %></span>
 <span class="event_name">将任务</span>
 <span class="event_name"><%= event.event_content["title"] %></span>
-<span class="event_name">完成时间</span>
-<% if !event.event_content["old_due"].nil? %>
-<span class="event_text">从<%= event.event_content["old_due"] %>修改为</span>
+<span class="event_name">完成时间从</span>
+<span class="event_text">
+<% if event.event_content["old_due"].nil? %>
+无
+<% else %>
+<%= event.event_content["old_due"] %>
 <% end %>
+</span>
 <span class="event_name">修改为</span>
 <span class="event_text"><%= event.event_content["due"] %></span>
