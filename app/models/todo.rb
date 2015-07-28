@@ -23,7 +23,7 @@ class Todo < ActiveRecord::Base
 
 
   def delete(user)
-    self.destroy
+    self.delete_at = Time.now
     self.create_event(user, "destroy", self.event_content)
   end
 
