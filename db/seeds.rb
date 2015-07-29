@@ -2,11 +2,17 @@
 
 team = Team.create(name: "test")
 
-admin_user = User.create(name: "admin_user", team_id: team.id)
-user_a = User.create(name: "user_a", team_id: team.id)
-user_b = User.create(name: "user_b", team_id: team.id)
+admin_account = Account.create(name: "admin")
+account_a = Account.create(name: "a")
+account_b = Account.create(name: "b")
+
+admin_user = admin_account.users.create(name: admin_account.name, team_id: team.id)
+user_a = account_a.users.create(name: account_a.name, team_id: team.id)
+user_b = account_b.users.create(name: account_b.name, team_id: team.id)
+
 project_a = Project.create(name: "project_a", team_id: team.id)
 project_b = Project.create(name: "project_b", team_id: team.id)
+
 Access.create(project_id: project_a.id, user_id: user_a.id)
 Access.create(project_id: project_a.id, user_id: user_b.id)
 Access.create(project_id: project_b.id, user_id: user_b.id)
