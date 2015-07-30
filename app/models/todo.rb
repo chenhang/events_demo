@@ -24,11 +24,8 @@ class Todo < ActiveRecord::Base
   end
 
   def create_events
-    if !changes[:due].nil?
-      create_event("change_due", event_content.update({old_due: due_was, due: due}))
-    end
 
-    if !changes[:doer_id].nil?
+    unless changes[:doer_id].nil?
       if doer_id_was.nil?
         create_event("assign", event_content.update({doer_id: doer.id, doer_name: doer.name}))
       elsif doer_id.nil?
@@ -39,12 +36,9 @@ class Todo < ActiveRecord::Base
       end
     end
 
-    if !changes[:delete_at].nil?
-      create_event("delete", event_content)
-    end
-    if !changes[:status].nil? && status == "finish"
-      create_event("finish", event_content)
-    end
+    create_event("delete", event_content) unless changes[:delete_at].nil?
+    create_event("change_due", event_content.update({old_due: due_was, due: due})) unless changes[:due].nil?
+    create_event("finish", event_content) if !changes[:status].nil? && status == "finish"
   end
 
 
